@@ -1,0 +1,18 @@
+---
+title: "Jaleise Hall"
+image: "jaleise.jpg"
+site: distill::distill_website
+links:
+  - label: LinkedIn
+    url: "https://www.linkedin.com/in/jaleise-hall-875b13131/"
+  - label: Twitter
+    url: "https://twitter.com/"
+  - label: GitHub
+    url: "https://github.com/jaleisehall"
+  - label: Email
+    url: "mailto:jaleise_hall@ucsb.edu"
+output:
+  postcards::trestles
+---
+ 
+I am a Master's candidate who graduated from Columbia College Chicago in 2018 with a Bachelor of Arts in Music Business Management with a minor in biology.  I received my degree in just three years and ended up finding a much deeper interest in the entrepreneurial and managerial aspects of the major, rather than the musical aspects.  In my Entrepreneurship class, my interest in environmental science was sparked with the help of my semester long venture assignment in which I planned, marketed, and laid out costs for a waste-diminishing product. I was guided by my professor and mentor Elizabeth Davis-Berg to enroll in an intensive Marine Invertebrate Zoology summer course at the University of Washington. During my time studying marine inverts native to the San Juan Islands, I developed a love for various strange marine worms. After doing some reading on these worms, I came across a few articles that talked about their consumption of plastics and how they help produce microplastics through their excretions. I currently specialize in Pollution Prevention & Remediation and Energy & Climate with an Environmental Data Science focus at the Bren School of Environmental Science and Management. 
