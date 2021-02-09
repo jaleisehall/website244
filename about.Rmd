@@ -1,10 +1,78 @@
 ---
-title: "About this site"
-description: |
-  Some additional details about the website
+title: "About Jaleise"
+name: Jaleise Hall
+position: "Master's Candidate"
+address: "Lompoc, California"
+profilepic: "jaleise.jpg"
+email: "jaleise_hall@ucsb.edu"
+github: jaleisehall
+dare: "`r format(Sys.time(), '%B %Y')`"
+aboutme: "Constantly excited about #rstats"
+output:
+  vitae::markdowncv
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
-```
+## Education
 
+**Master of Environmental Science and Management**, 3.58 GPA (Expected June 2021)
+<br>
+**Bren School of Environmental Science & Management - University of California: Santa Barbara (UCSB)**
+<br>
+  Specialization: Pollution Prevention and Remediation & Energy and Climate | Focus: Environmental Data Science 
+<br>
+  Course Highlights: Energy Demand Analysis, Biological Waste Treatment, Pollution Prevention, Energy and Resource Productivity, Fate & Transport of Pollutants, Advanced Data Analysis, Computing for Environmental Science & Management (All courses completed by June 2021)
+
+**Bachelor of Arts in Music Business Management (Minor in Biology)**, 3.91 GPA (May 2018)	
+**Columbia College Chicago**  					            
+Business Course Highlights: Business Writing, Entertainment Law, Entrepreneurship 
+<br>
+Awards: Dean’s List (All 6 Semesters) | Recruiting Award: $12,000 
+
+**Interdisciplinary Undergraduate Program (Non-Matriculated)**, 3.1 GPA (July 2018)
+<br>
+**University of Washington - Friday Harbor Laboratories**				
+Summer Course: Marine Invertebrate Zoology a 5-week intensive lab and field work course
+
+
+## Experience / Projects
+
+**Water-Energy Nexus**, Santa Barbara, CA (4/2020 – present)
+<br>
+**Role**: Data Manager | Client: Moulton Niguel Water District (MNWD)
+<br>
+- Developed and organized metadata for a wide range of large datasets
+<br>
+- Performed data wrangling and analysis using R-Studio
+
+**Data Analysis Intern – Moulton Niguel Water District (MNWD)**, Aliso Viejo, CA (6/20 – 8/20)
+<br>
+- Managed the spread of data received under multiple collaborative platforms (GitHub, Jupyter Notebook, Zotero, Box, Google Drive)
+<br>
+- Wrangled data to analyze energy consumption in MNWD
+
+**Event Host – Santa Barbara Zoo**, Santa Barbara, CA (09/2019 – 03/2020)
+<br>
+- Overseeing preparations and meeting time requirements for various zoo events of 150 – 4,000 guests
+<br>
+- Ensuring high level of customer service by escorting service providers, guests, and clients to the event site
+
+**Team Lead – Emagine Theatres**, Royal Oak, MI (04/2014 – 08/2019)
+<br>
+- Trained up to 4 employees each month by making sure they were aware of company policies, practiced good customer service skills, and paid attention to new and changing work methods 
+<br>
+- Developed and received approval for a clean-cut system for upkeep and daily duties for 4 different areas of the theatre
+<br>
+- Forged relationships with guest by providing a luxury experience based on and increasing company image
+<br>
+- Took initiative to delegate tasks for efficiency in team environments 
+<br>
+- Adapted to new work methods and tasks quickly by utilizing strong time management skills learning from past hurdles
+
+## Interests
+- Coding in R
+<br>
+- Making maps with GIS
+<br>
+- Drawing
+<br>
+- Sculpting
