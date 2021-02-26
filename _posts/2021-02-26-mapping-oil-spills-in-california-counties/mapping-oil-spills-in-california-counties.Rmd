@@ -1,0 +1,83 @@
+---
+title: "Mapping oil spills in California counties"
+description: |
+  Chloropleth and interactive mapping of oil spill events in California.
+author:
+  - name: Jaleise Hall
+    url: {}
+date: 02-26-2021
+output:
+  distill::distill_article:
+    self_contained: false
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+
+# Attach Packages #
+library(tidyverse)
+library(here)
+library(janitor)
+library(sf)
+library(tmap)
+library(gstat)
+library(stars)
+```
+
+### Read in Data
+
+```{r}
+
+oil_spills <- read_sf(here::here("project_tab_data",
+                                 "Oil_Spill_Incident_Tracking_%5Bds394%5D-shp"), 
+                      layer = "Oil_Spill_Incident_Tracking_%5Bds394%5D") %>% 
+  clean_names()
+
+#st_crs(oil_spills)
+
+ca_counties <- read_sf(here("project_tab_data", "ca_counties"), layer = "CA_Counties_TIGER2016") %>% 
+  clean_names() %>% 
+  select(name) 
+
+#st_crs(ca_counties)
+
+```
+
+### Interactive Map
+
+```{r}
+
+tmap_mode("view")
+
+tm_shape(oil_spills) +
+  tm_dots()
+
+```
+
+### Static Chloropleth Map
+
+```{r}
+
+oil_spills_counties <- ca_counties %>% 
+  st_join(oil_spills) %>% 
+  group_by(name) %>%
+  count()
+
+ggplot() +
+  geom_sf(data = oil_spills_counties, aes(fill = n),
+          color = "black") +
+  scale_fill_gradientn(colors = c("orange", "deeppink3", "mediumorchid1")) + 
+  labs(fill = "Number of Spills",
+       title = "Inland Oil Spill Events by County 2008 HALL 2020") +
+  theme_void()
+
+```
+
+
+
+Distill is a publication format for scientific and technical writing, native to the web.
+
+Learn more about using Distill at <https://rstudio.github.io/distill>.
+
+

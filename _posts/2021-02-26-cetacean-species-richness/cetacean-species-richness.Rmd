@@ -1,0 +1,101 @@
+---
+title: "Cetacean species richness"
+description: |
+  Mapping species richenss of cetacean species in the coastal California area, California Bight.
+author:
+  - name: Jaleise Hall
+    url: {}
+date: 02-26-2021
+output:
+  distill::distill_article:
+    self_contained: false
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+
+library(raster)
+library(tidyverse)
+library(here)
+library(sf)
+library(janitor)
+library(fasterize)
+library(rnaturalearth)
+```
+
+### Create Raster
+
+```{r}
+
+rastlist <- list.files(path = here::here("project_tab_data", "ca_cetaceans"), full.names=TRUE)
+
+allrasters <- lapply(rastlist, raster)
+
+ca_cetaceans <- 
+  raster::stack(rastlist)
+
+plot(ca_cetaceans)
+
+threshold <- 0.8
+
+# Reclassification matrix 
+rec_cet_matrix <- c(-Inf, threshold, 0,
+                   threshold, Inf, 1,
+                   0, threshold, 0,
+                   0, Inf, 0)
+# Reclassify 
+rec_cetaceans <- reclassify(ca_cetaceans, rcl = rec_cet_matrix)
+
+# Convert to data frame
+cetaceans_df <- raster::rasterToPoints(rec_cetaceans) %>%
+  as.data.frame() %>% 
+  clean_names() %>% 
+  pivot_longer(cols = balaenoptera_acutorostrata:ziphius_cavirostris, names_to = "species", values_to = "presence_code")
+
+cetaceans_df[is.na(cetaceans_df[])] <- 0
+
+cetaceans_presence <- cetaceans_df %>% 
+   mutate(presence_status = case_when(
+    presence_code == 1 ~ "present",
+    presence_code == 0 ~ "not present"
+  ))
+
+```
+
+### Plot the Raster
+
+```{r}
+
+# Plot reclassified layer
+# plot(depth_binary)
+
+world <- ne_countries(scale = "medium", returnclass = "sf")
+world_coastline <- ne_coastline(scale = "medium", returnclass = "sf")
+
+
+cetacean_richness <- ggplot() +
+  geom_raster(data = cetaceans_presence, aes(x = x, y = y, fill = presence_status)) +
+  geom_sf(data = world_coastline) +
+  geom_sf(data = world) +
+  coord_sf(xlim = c(-125, -115), ylim = c(32, 38)) +
+  scale_fill_manual(values = c("deeppink3", "mediumorchid1")) +
+  labs(fill = "",
+       x = "longitude",
+       y = "latitude", 
+       title = "California Bight Cetacean Species Richness HALL 2020") +
+  theme_linedraw() +
+  theme(plot.title = element_text(hjust = 0.5))
+
+ggsave(here("project_tab_data", "cetacean_richness.png"), height = 4, width = 6)
+
+```
+
+
+![**Figure 1.** This map shows the cetacean species richness for the 35 cetacean species found in the California Bight. This richness is reflective of probability of occurance based on species preferences for water temperature, depth, salinity, and distance to land. Presence was determined based on an occurance threshold of 0.8 such that if occurance was at or about 0.8, then the species would be deemed "present".](cetacean_richness.png)
+
+Distill is a publication format for scientific and technical writing, native to the web.
+
+Learn more about using Distill at <https://rstudio.github.io/distill>.
+
+

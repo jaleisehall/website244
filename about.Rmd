@@ -1,5 +1,5 @@
 ---
-title: "About Jaleise"
+title: "CV"
 name: Jaleise Hall
 position: "Master's Candidate"
 address: "Lompoc, California"
