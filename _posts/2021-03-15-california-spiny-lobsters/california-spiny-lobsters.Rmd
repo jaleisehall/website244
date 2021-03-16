@@ -1,0 +1,200 @@
+---
+title: "California spiny lobsters"
+description: |
+  Data analysis for California spiny lobsters (Panulirus interruptus) at five SBC LTER sites off the coast of Santa Barbara Channel.
+author:
+  - name: Jaleise Hall
+    url: {}
+date: 03-15-2021
+output:
+  distill::distill_article:
+    self_contained: false
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+```{r}
+# Attach Packages #
+library(tidyverse)
+library(janitor)
+library(tidyr)
+library(here)
+
+# Read in Data #
+lobster_abundance_sbc_lter <- readr::read_csv(here::here("project_tab_data","lobster_abundance_sbc_lter.csv"),
+                                              na = "-99999") %>% 
+  clean_names()
+```
+
+### Introduction
+
+From 2012 to 2018 data were collected on California spiny lobsters (Panulirus interruptus) from multiple collection sites off the coast of the Santa Barbara Channel (Reed D. 2019). During the study, spiny lobsters were collected by divers from five SBC LTER long term kelp forest study sites (Reed D. 2019). In this report, we analyze the data collected to note lobster abundance as it changed from 2012 to 2018 and how the size distributions shift between 2012 and 2018. It is important for this study to note that of the five sites, two are recognized as Marine Protected Areas (MPA) while the remaining three are not. The two MPA sites observed are Naples and Isla Vista while the non-MPA sites consist of Arroyo Quemado, Mohawk, and Carpinteria. We use the data collected by the Santa Barbara Coastal LTER to compare California spiny lobsters from MPA and non-MPA during the time of the original study.
+
+### Data and Methods
+
+Data for California spiny lobster abundance and size from 2012 to 2018 were collected and provided by the Santa Barbara Coastal LTER. Lobster abundance is estimated from collection by divers on a two to four-week cycle during the lobster fishing season between October and March. Collections were done annually beginning in 2012 and concluding in 2018. Collection is done in 60m x 2m transects associated with SBC LTER permanent transects. Lobster size is a measure of a visual estimate of lobster carapace length (mm). Mean lobster size (mm) was compared at MPA and non-MPA sites in 2012 and 2018 by two-sample t-tests ( $\alpha$ = 0.05 throughout). Size distribution shifts from 2012 to 2018 are compared by violin plots and density curves across sites. Annual lobster abundance was compared across sites from 2012 to 2018 by column graphs. All analyses and figures were prepared using R software version 3.6.1.
+
+
+### Results
+#### 1. Annual lobster abundance by site 2012-2018
+
+Trends in California spiny lobster abundance were compared for MPA and non-MPA long term kelp forest study sites (Figure 1). We can see an overall increase in spiny lobster abundance at the Naples (NAPL) and Isla Vista (IVEE) MPA sites. There is variability among the three non-MPA sites represented in blue. It is notable how drastically the populations increased in the MPA sites from abundances of less than 50 to those in Isla Vista and Naples exceeding 900 and 290 respectively. Populations across most sites spiked in 2015 where we are able to see much greater population sizes, but they drop back down in the non-MPA sites afterward.
+
+```{r}
+lobster_data_a <- lobster_abundance_sbc_lter %>% 
+  group_by(site, year) %>% 
+  summarize(tot_count = sum(count)) %>% 
+  mutate(type = if_else(site == 'IVEE', 'MPA',
+                        if_else(site == 'NAPL', 'MPA', 'Non-MPA')))
+
+ggplot(data = lobster_data_a, aes(x = year, y = tot_count)) +
+  geom_col(aes(fill = type)) +
+  facet_wrap(~site, scales = "free") +
+  labs(x = "Year",
+       y = "Lobster Count",
+       title = "Annual Lobster Abundance By Site 2012-2018 HALL") +
+  theme(legend.title = element_blank())
+  
+```
+
+**Figure 1.** *California spiny lobster (Panulirus interruptus) abundance. Annual populations for lobsters (2012 - 2018) at MPA (Naples, Isla Vista) and non-MPA (Arroyo Quemado, Mohawk, Carpinteria) Santa Barbara LTER long term kelp forest study sites. Data: SBC LTER: Reef: Abundance, size and fishing effort for California Spiny Lobster (Panulirus interruptus), ongoing since 2012*
+
+
+#### 2. Lobster size distributions shifts by sites in 2012 and 2018
+
+While the range of lobster carapace length (mm) of the non-MPA sites did not alter significantly between 2012 and 2018, the range in sizes became notably larger in 2018 with respect to 2012 at the two MPA sites (Figure 2a).
+
+
+```{r}
+lobster_data_b <- lobster_abundance_sbc_lter %>%
+  filter(year %in% c("2012","2018")) %>%
+  mutate(year = as.character(year)) %>% 
+  mutate(type = if_else(site == 'IVEE', 'MPA',
+                        if_else(site == 'NAPL', 'MPA', 'Non-MPA')))
+
+ggplot(data = lobster_data_b, aes(x = year, y = size_mm)) +
+  geom_violin(aes(fill = type),
+              width = 0.5) +
+  facet_wrap(~site, scales = "free") +
+  theme_minimal() +
+  theme(axis.title.x=element_blank(),
+        axis.ticks.x=element_blank(),
+        legend.title = element_blank()) +
+  labs(y = "Lobster Carapace Length (mm)",
+       title = "Lobster Size Distribution Shifts Between 2012 & 2018 HALL")
+```
+
+**Figure 2a.** *California spiny lobster (Panulirus interruptus) size distribution shifts by SBC LTER site (2012 - 2018). Lobster carapace length (mm) distributions at MPA (Naples, Isla Vista) and non-MPA (Arroyo Quemado, Mohawk, Carpinteria) Santa Barbara LTER long term kelp forest study sites observed for 2012 and 2018. Data: SBC LTER: Reef: Abundance, size and fishing effort for California Spiny Lobster (Panulirus interruptus), ongoing since 2012*
+
+
+```{r}
+ggplot(data = lobster_data_b, aes(x = size_mm)) +
+  geom_density(aes(fill = year),
+               alpha = 0.5) +
+  facet_wrap(~site) +
+  labs(x = "Lobster Carapace Length (mm)")
+```
+
+**Figure 2b.** *California spiny lobster (Panulirus interruptus) density shifts by SBC LTER site (2012 - 2018). Lobster carapace length (mm) distributions at MPA (Naples, Isla Vista) and non-MPA (Arroyo Quemado, Mohawk, Carpinteria) Santa Barbara LTER long term kelp forest study sites observed for 2012 and 2018. Data: SBC LTER: Reef: Abundance, size and fishing effort for California Spiny Lobster (Panulirus interruptus), ongoing since 2012*
+
+There is a bit of a right skew at Isla Vista in 2018 due to some outliers (Figure 2a), but overall the distribution of the MPA sites became fairly normal in 2018 (Figure 2b). Across all five sites we see the 2018 density curves look to be more normally distributed. The shifts within the MPA sites appear to be more significant.
+
+
+#### 3. Significance of size differences between MPA and non-MPA sites in 2018 and 2012
+
+Lobster size differences (mm) were calculated between MPA and non-MPA sites for 2012 and 2018 using four different two-sample t-tests each with a significance level $\alpha$ = 0.05.
+
+```{r, include = FALSE}
+lobster_abundance_sbc_lter_types <- lobster_abundance_sbc_lter %>%
+  mutate(type = if_else(site == 'IVEE', 'MPA',
+                        if_else(site == 'NAPL', 'MPA', 'Non-MPA')))
+# consolidated dfs #
+lobster_2012_mpa <- lobster_abundance_sbc_lter_types %>% 
+  select(year, size_mm, type) %>%
+  filter(year == "2012") %>%
+  filter(type == "MPA")
+
+lobster_2012_non_mpa <- lobster_abundance_sbc_lter_types %>% 
+  select(year, size_mm, type) %>%
+  filter(year == "2012") %>%
+  filter(type == "Non-MPA")
+
+lobster_2018_mpa <- lobster_abundance_sbc_lter_types %>% 
+  select(year, size_mm, type) %>%
+  filter(year == "2018") %>%
+  filter(type == "MPA")
+
+lobster_2018_non_mpa <- lobster_abundance_sbc_lter_types %>% 
+  select(year, size_mm, type) %>%
+  filter(year == "2018") %>%
+  filter(type == "Non-MPA")
+
+# t.tests #
+lobster_2012_ttest <- t.test(lobster_2012_mpa$size_mm, lobster_2012_non_mpa$size_mm)
+lobster_2012_ttest
+
+lobster_2018_ttest <- t.test(lobster_2018_mpa$size_mm, lobster_2018_non_mpa$size_mm)
+lobster_2018_ttest
+
+lobster_mpa_ttest <- t.test(lobster_2012_mpa$size_mm, lobster_2018_mpa$size_mm)
+lobster_mpa_ttest
+
+lobster_non_mpa_ttest <- t.test(lobster_2012_non_mpa$size_mm, lobster_2018_non_mpa$size_mm)
+lobster_non_mpa_ttest
+```
+
+**Table 1.** *Sample sizes (n), means, and standard deviations (sd) for California spiny lobster (Panulirus interruptus) carapace lengths (mm) at MPA and non-MPA SBC LTER sites observed for 2012 and 2018. Data: SBC LTER: Reef: Abundance, size and fishing effort for California Spiny Lobster (Panulirus interruptus), ongoing since 2012*
+```{r}
+lobster_2012_mpa_v <- lobster_2012_mpa %>% 
+  pull(size_mm)
+lob_2012_nax_mpa <- lobster_2012_mpa_v[!is.na(lobster_2012_mpa_v)]
+
+lobster_2012_non_mpa_v <- lobster_2012_non_mpa %>% 
+  pull(size_mm)
+lob_2012_nax_non_mpa <- lobster_2012_non_mpa_v[!is.na(lobster_2012_non_mpa_v)]
+
+lobster_2018_mpa_v <- lobster_2018_mpa %>% 
+  pull(size_mm)
+lob_2018_nax_mpa <- lobster_2018_mpa_v[!is.na(lobster_2018_mpa_v)]
+
+lobster_2018_non_mpa_v <- lobster_2018_non_mpa %>% 
+  pull(size_mm)
+lob_2018_nax_non_mpa <- lobster_2018_non_mpa_v[!is.na(lobster_2018_non_mpa_v)]
+
+#sd(lob_2012_nax_mpa)
+#sd(lob_2012_nax_non_mpa)
+#sd(lob_2018_nax_mpa)
+#sd(lob_2018_nax_non_mpa)
+
+row_names <- c("MPA 2012", "MPA 2018", "Non-MPA 2012", "Non-MPA 2018")
+means <- c(67.70, 77.77, 74.22, 73.82)
+sds <- c(12.48, 13.10, 12.89, 10.81)
+sample_sizes <- c(30, 743, 155, 389)
+
+table <- data.frame(sample = row_names, n = sample_sizes, mean = means, sd = sds)
+
+knitr::kable(table)
+
+```
+
+We can see that the mean carapace length increased in 2018 at the MPA sites (Table 1). In the third of our four t-tests we tested to see if there was a significant mean size difference in lobsters observed for MPA sites only in 2012 and 2018. From this t-test (two-sample t-test, t(`r lobster_mpa_ttest$parameter`) = `r lobster_mpa_ttest$statistic`, p = `r lobster_mpa_ttest$p.value`) we see that we have enough evidence to reject the null hypothesis that we'd be able to get means that are at least this different by random chance if the true difference in population means is equal to zero. In other words, this shift from 67.70 to 77.77 mm in carapace length was a significant increase. For non-MPA sites our t-test (two-sample t-test, t(`r lobster_non_mpa_ttest$parameter`) = `r lobster_non_mpa_ttest$statistic`, p = `r lobster_non_mpa_ttest$p.value`) shows that there is a 73.23% chance that we'd be able to get means that are at least this different by random chance if the true difference in population means is equal to zero. This means that we do not have enough evidence to reject the null hypothesis that the true difference in means is zero.
+
+### Summary
+
+- Population increase is far more prominent at MPA sites than at non-MPA sites (Figure 1)
+- The shift between 2012 and 2018 size distributions are more drastic as MPA sites than non-MPA sites (Figure 2b)
+- Lobster carapace length (mm) is significantly larger in 2018 at MPA sites (Table 1)
+- Populations at non-MPA sites in general have been declining after 2015 (Figure 1)
+
+### References
+
+**Reed D. 2019.** *SBC LTER: Reef: Abundance, size and fishing effort for California Spiny Lobster (Panulirus interruptus), ongoing since 2012.* Environmental Data Initiative.
+
+Distill is a publication format for scientific and technical writing, native to the web.
+
+Learn more about using Distill at <https://rstudio.github.io/distill>.
+
+

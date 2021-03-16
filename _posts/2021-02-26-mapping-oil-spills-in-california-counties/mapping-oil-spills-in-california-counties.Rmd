@@ -9,11 +9,12 @@ date: 02-26-2021
 output:
   distill::distill_article:
     self_contained: false
+    code_folding: hide
 ---
 
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
 
 # Attach Packages #
 library(tidyverse)
@@ -32,7 +33,7 @@ library(stars)
 oil_spills <- read_sf(here::here("project_tab_data",
                                  "Oil_Spill_Incident_Tracking_%5Bds394%5D-shp"), 
                       layer = "Oil_Spill_Incident_Tracking_%5Bds394%5D") %>% 
-  clean_names()
+  clean_names() 
 
 #st_crs(oil_spills)
 
@@ -50,7 +51,7 @@ ca_counties <- read_sf(here("project_tab_data", "ca_counties"), layer = "CA_Coun
 
 tmap_mode("view")
 
-tm_shape(oil_spills) +
+tmap::tm_shape(oil_spills) +
   tm_dots()
 
 ```
